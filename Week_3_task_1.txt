@@ -1,0 +1,91 @@
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+ 
+class Menu {
+public:
+    string name;
+    vector<Menu> subMenus;
+ 
+    void addsubMenu(const Menu& submenu) {
+        subMenus.push_back(submenu);
+    }
+ 
+    void displaysubmenus() {
+        for (auto s : subMenus) {
+            cout << s.name << endl;
+        }
+    }
+ 
+    void choosechoice() {
+        int choice;
+        cout << "Enter 1 for settings menu and 2 for media menu: " << endl;
+        cin >> choice;
+ 
+        if (choice == 1) {
+            cout << "------ Settings Menu --------" << endl;
+            int subchoice;
+            cout << "Enter subchoice for settings menu:" << endl;
+            cout << "1 for Display Settings, 2 for Audio Settings" << endl;
+            cin >> subchoice;
+ 
+            if (subchoice == 1) {
+                cout << "Display Settings" << endl;
+            }
+            else if (subchoice == 2) {
+                cout << "Audio Settings" << endl;
+            }
+            else {
+                cout << "Invalid choice in settings menu!" << endl;
+            }
+        }
+        else if (choice == 2) {
+            cout << "------ Media Menu --------" << endl;
+            int subchoice;
+            cout << "Enter subchoice for media menu:" << endl;
+            cout << "1 for Radio, 2 for Bluetooth Audio" << endl;
+            cin >> subchoice;
+ 
+            if (subchoice == 1) {
+                cout << "Radio" << endl;
+            }
+            else if (subchoice == 2) {
+                cout << "Bluetooth Audio" << endl;
+            }
+            else {
+                cout << "Invalid choice in media menu!" << endl;
+            }
+        }
+        else {
+            cout << "You entered an invalid choice. Please enter a valid choice." << endl;
+        }
+    }
+};
+ 
+int main() {
+    Menu m;
+    Menu settings;
+    settings.name = "Settings";
+    Menu displaySettings;
+    displaySettings.name = "Display Settings";
+    Menu audioSettings;
+    audioSettings.name = "Audio Settings";
+    settings.addsubMenu(displaySettings);
+    settings.addsubMenu(audioSettings);
+    Menu media;
+    media.name = "Media";
+    Menu radio;
+    radio.name = "Radio";
+    Menu bluetoothAudio;
+    bluetoothAudio.name = "Bluetooth Audio";
+    media.addsubMenu(radio);
+    media.addsubMenu(bluetoothAudio);
+    m.addsubMenu(settings);
+    m.addsubMenu(media);
+    cout << "Main Menu: " << endl;
+    m.displaysubmenus();
+    m.choosechoice();
+ 
+    return 0;
+}

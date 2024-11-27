@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+using namespace std;
+
+class Theme {
+private:
+    string backgroundColor;
+    string fontColor;
+    int fontSize;
+    string iconStyle;
+
+public:
+    Theme(const string& bg, const string& font, int size, const string& icon)
+        : backgroundColor(bg), fontColor(font), fontSize(size), iconStyle(icon) {}
+
+    
+    Theme(const Theme& other)
+        : backgroundColor(other.backgroundColor), fontColor(other.fontColor),
+          fontSize(other.fontSize), iconStyle(other.iconStyle) {}
+
+    void apply() const {
+        cout << "Applying Theme:" << endl;
+        cout << "Background Color: " << backgroundColor << endl;
+        cout << "Font Color: " << fontColor << endl;
+        cout << "Font Size: " << fontSize << endl;
+        cout << "Icon Style: " << iconStyle << endl;
+    }
+
+    void displayPreview() const {
+        cout << "Preview of this Theme:" << endl;
+        cout << "Background Color: " << backgroundColor << ", Font Color: " << fontColor
+             << ", Font Size: " << fontSize << ", Icon Style: " << iconStyle << endl;
+    }
+};
+
+int main() {
+    map<string, Theme> themes;
+
+    themes.emplace("Classic", Theme("White", "Black", 14, "Simple"));
+    themes.emplace("Sport", Theme("Red", "White", 16, "Bold"));
+    themes.emplace("Eco", Theme("Green", "Dark Gray", 12, "Minimal"));
+
+    cout << "Available Themes: " << endl;
+    for (const auto& theme : themes) {
+        cout << theme.first << endl;
+    }
+
+    string choice;
+    cout << "\nEnter the theme name to preview or apply: ";
+    getline(cin, choice);  
+
+    auto it = themes.find(choice);
+    if (it != themes.end()) {
+        it->second.displayPreview();  
+        it->second.apply();           
+    } else {
+        cout << "Invalid theme name!" << endl;
+    }
+
+    return 0;
+}

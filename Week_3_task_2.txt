@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <mutex>
+#include <chrono>
+#include <cstdlib>  
+#include <ctime>  
+ 
+using namespace std;
+ 
+class VehicleData {
+public:
+    int speed;
+    int fuelLevel;
+    int engineTemperature;
+ 
+    VehicleData() : speed(0), fuelLevel(100), engineTemperature(90) {}
+ 
+    void updateSpeed() {
+        speed = rand() % 202;
+    }
+ 
+    void updateFuelLevel() {
+        fuelLevel = rand() % 101;
+    }
+ 
+    void updateEngineTemperature() {
+        engineTemperature = rand() % 121;
+    }
+};
+ 
+class Display {
+public:
+    VehicleData &vehicleData;
+    mutex mtx;                
+ 
+    Display(VehicleData &data) : vehicleData(data) {}
+    void showData() {
+        lock_guard<mutex> lock(mtx);
+        cout << "\nSpeed: " << vehicleData.speed << " km/h"
+             << "\tFuel Level: " << vehicleData.fuelLevel << " %"
+             << "\tEngine Temperature: " << vehicleData.engineTemperature << " °C" << endl;
+        if (vehicleData.engineTemperature > 100) {
+            cout << "Warning: Engine temperature too high!" << endl;
+        }
+        if (vehicleData.fuelLevel < 10) {
+            cout << "Warning: Low fuel level!" << endl;
+        }
+    }
+};
+void updateVehicleData(VehicleData &data) {
+    while (true) {
+        data.updateSpeed();
+        data.updateFuelLevel();
+        data.updateEngineTemperature();
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+}
+void displayVehicleData(Display &display) {
+    while (true) {
+        display.showData();
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+}
+ 
+int main() {
+    srand(time(0));
+ 
+    VehicleData vehicleData;
+    Display display(vehicleData);
+    thread updateThread(updateVehicleData, ref(vehicleData));
+    thread displayThread(displayVehicleData, ref(display));
+    updateThread.join();
+    displayThread.join();
+ 
+    return 0;
+}
